@@ -18,5 +18,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "FCM Notification Message: " +
                 remoteMessage.getNotification());
         Log.d(TAG, "FCM Data Message: " + remoteMessage.getData());
+
+        //TODO Call layout show receive noti
     }
+
+
+
 }
