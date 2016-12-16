@@ -1,5 +1,6 @@
 package com.example.katesudal.spikefirebase;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabase;
     Button buttonSendNoti;
     EditText editTextSendNotiMessage;
+    Button buttonGotoReservation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("message").setValue("test");
-        mDatabase.child("message2").setValue("test2");
-
         buttonSendNoti = (Button) findViewById(R.id.buttonSendNoti);
         editTextSendNotiMessage = (EditText) findViewById(R.id.editTextSendNotiMessage);
+        buttonGotoReservation = (Button) findViewById(R.id.buttonGotoReservation);
 
         buttonSendNoti.setOnClickListener(this);
+        buttonGotoReservation.setOnClickListener(this);
 
 //        Log.d("Token=", FirebaseInstanceId.getInstance().getToken());
 
@@ -81,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
 
+        }
+
+        if(v.getId()==R.id.buttonGotoReservation){
+            Intent intent = new Intent(this,RoomReservation.class);
+            startActivity(intent);
         }
     }
 
