@@ -26,7 +26,6 @@ public class RoomReservation extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_room_reservation);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("User").child("0").child("id").setValue(0);
         mDatabase.child("User").child("0").child("name").setValue("Anna");
         mDatabase.child("User").child("0").child("email").setValue("email.firebase@email.com");
 
