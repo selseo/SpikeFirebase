@@ -12,12 +12,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class ChooseReservedRoom extends AppCompatActivity implements View.OnClickListener{
     Spinner spinnerFreeRoom;
@@ -73,7 +76,38 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.buttonSendReservation){
+            String roomName = spinnerFreeRoom.getSelectedItem().toString();
+            Query queryRoom = mDatabase.child("Room").orderByChild("name").equalTo(roomName);
+//            Log.d("Query", String.valueOf(room.getRef()));
+            queryRoom.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String rooms = (String) (((HashMap<String,Object>) dataSnapshot.getValue()).keySet().toArray())[0];
+                    Log.d("Snapshot=", String.valueOf(rooms));
+                    addNewReservation(rooms);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
         }
+    }
+
+    private void addNewReservation(String roomId) {
+        Reservation reservation = new Reservation("0",roomId);
+        String timeStamp = "xxx";
+        String reservedDate = "yyy";
+        String reservedType = "zzz";
+        String key = mDatabase.child("ReservationDetail").push().getKey();
+        ReservationDetail reservationDetail = new ReservationDetail(reservedDate,timeStamp,reservedType);
+        Map<String, Object> reservationDetailValues = reservationDetail.toMap();
+        Map<String,Object> reservationValue = reservation.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/ReservationDetail/" + key, reservationDetailValues);
+        childUpdates.put("/Reservation/"+key,reservationValue);
+        mDatabase.updateChildren(childUpdates);
     }
 }
