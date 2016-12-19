@@ -15,12 +15,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class ChooseReservedRoom extends AppCompatActivity implements View.OnClickListener{
     Spinner spinnerFreeRoom;
@@ -98,7 +102,8 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
 
     private void addNewReservation(String roomId) {
         Reservation reservation = new Reservation("0",roomId);
-        String timeStamp = "xxx";
+        Long tsLong = System.currentTimeMillis()/1000;
+        String timeStamp = getDateCurrentTimeZone(tsLong);
         String reservedDate = "yyy";
         String reservedType = "zzz";
         String key = mDatabase.child("ReservationDetail").push().getKey();
@@ -109,5 +114,19 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         childUpdates.put("/ReservationDetail/" + key, reservationDetailValues);
         childUpdates.put("/Reservation/"+key,reservationValue);
         mDatabase.updateChildren(childUpdates);
+    }
+
+    public  String getDateCurrentTimeZone(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getTimeZone("UTC+07:00");
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currentTimeZone = calendar.getTime();
+            return sdf.format(currentTimeZone);
+        }catch (Exception e) {
+        }
+        return "";
     }
 }
