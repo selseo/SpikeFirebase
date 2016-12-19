@@ -5,14 +5,12 @@ package com.example.katesudal.spikefirebase;
  */
 
 public class Room {
-    private int id;
     private String name;
     private int maxCapacity;
     private int floor;
 
-    public Room(int floor, int id, int maxCapacity, String name) {
+    public Room(int floor, int maxCapacity, String name) {
         this.floor = floor;
-        this.id = id;
         this.maxCapacity = maxCapacity;
         this.name = name;
     }
@@ -23,14 +21,6 @@ public class Room {
 
     public void setFloor(int floor) {
         this.floor = floor;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getMaxCapacity() {
