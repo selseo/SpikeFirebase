@@ -30,6 +30,7 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
     Spinner spinnerFreeRoom;
     Button buttonSendReservation;
     private DatabaseReference mDatabase;
+    String reservedDate;
 
 
     @Override
@@ -43,9 +44,7 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
 
         buttonSendReservation.setOnClickListener(this);
 
-
-
-
+        reservedDate = getIntent().getExtras().getString("time");
         mDatabase.child("Room").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -60,10 +59,25 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
 
             }
         });
-
+//        showAvailableRoomInSpinner();
 
 
     }
+
+//    private void showAvailableRoomInSpinner() {
+//        Query queryReservationDetail = mDatabase.child("ReservationDetail").orderByChild("reservedDate").equalTo(reservedDate);
+//        queryReservationDetail.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Log.d("ReservesnapShot", String.valueOf(((HashMap<String,Object>) dataSnapshot.getValue()).keySet()));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     private void showRoomNameInSpinner(List<HashMap<String,String>> rooms) {
         Log.d("Room", String.valueOf(rooms));
@@ -82,13 +96,15 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         if(v.getId()==R.id.buttonSendReservation){
             String roomName = spinnerFreeRoom.getSelectedItem().toString();
             Query queryRoom = mDatabase.child("Room").orderByChild("name").equalTo(roomName);
-//            Log.d("Query", String.valueOf(room.getRef()));
             queryRoom.addValueEventListener(new ValueEventListener() {
+
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    String rooms = (String) (((HashMap<String,Object>) dataSnapshot.getValue()).keySet().toArray())[0];
-                    Log.d("Snapshot=", String.valueOf(rooms));
-                    addNewReservation(rooms);
+                    for(DataSnapshot roomDataSnapshot1: dataSnapshot.getChildren()) {
+                        Room room = roomDataSnapshot1.getValue(Room.class);
+                        Log.d("SnapValu2e=", room.toString());
+                        Log.d("Key=", roomDataSnapshot1.getKey());
+                    }
                 }
 
                 @Override
@@ -97,6 +113,8 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
                 }
             });
 
+
+
         }
     }
 
@@ -104,7 +122,6 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         Reservation reservation = new Reservation("0",roomId);
         Long tsLong = System.currentTimeMillis()/1000;
         String timeStamp = getDateCurrentTimeZone(tsLong);
-        String reservedDate = "yyy";
         String reservedType = "zzz";
         String key = mDatabase.child("ReservationDetail").push().getKey();
         ReservationDetail reservationDetail = new ReservationDetail(reservedDate,timeStamp,reservedType);
