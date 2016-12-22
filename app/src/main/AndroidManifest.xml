@@ -21,12 +21,8 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Activity.MainActivity">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service
@@ -44,8 +40,15 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".RoomReservation" />
-        <activity android:name=".ChooseReservedRoom"></activity>
+        <activity android:name=".Activity.RoomReservationActivity" />
+        <activity android:name=".Activity.ChooseReservedRoomActivity" />
+        <activity android:name=".Activity.SignInActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
