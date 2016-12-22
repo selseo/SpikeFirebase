@@ -1,4 +1,4 @@
-package com.example.katesudal.spikefirebase;
+package com.example.katesudal.spikefirebase.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.katesudal.spikefirebase.Model.Notification;
+import com.example.katesudal.spikefirebase.Model.SendNotiRequest;
+import com.example.katesudal.spikefirebase.Model.SendNotiResponse;
+import com.example.katesudal.spikefirebase.NotificationCallAPI;
+import com.example.katesudal.spikefirebase.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -48,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.buttonSendNoti) {
-            Log.d("Respone=","Request clivk");
             String notiMessage = String.valueOf(editTextSendNotiMessage.getText());
 
             OkHttpClient client = new OkHttpClient.Builder()
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(v.getId()==R.id.buttonGotoReservation){
-            Intent intent = new Intent(this,RoomReservation.class);
+            Intent intent = new Intent(this,RoomReservationActivity.class);
             startActivity(intent);
         }
     }

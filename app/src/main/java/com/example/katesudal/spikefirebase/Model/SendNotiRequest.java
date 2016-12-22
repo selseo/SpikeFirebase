@@ -1,4 +1,4 @@
-package com.example.katesudal.spikefirebase;
+package com.example.katesudal.spikefirebase.Model;
 
 
 public class SendNotiRequest {

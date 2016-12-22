@@ -1,4 +1,4 @@
-package com.example.katesudal.spikefirebase;
+package com.example.katesudal.spikefirebase.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.katesudal.spikefirebase.Model.Reservation;
+import com.example.katesudal.spikefirebase.Model.Room;
+import com.example.katesudal.spikefirebase.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class ChooseReservedRoom extends AppCompatActivity implements View.OnClickListener {
+public class ChooseReservedRoomActivity extends AppCompatActivity implements View.OnClickListener {
     Spinner spinnerFreeRoom;
     Button buttonSendReservation;
     private DatabaseReference mDatabase;
@@ -131,11 +136,12 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
     }
 
     private void createReservationByRoomId(String roomId) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Long tsLong = System.currentTimeMillis() / 1000;
         String timeStamp = getDateCurrentTimeZone(tsLong);
         String reservedType = "zzz";
         String key = mDatabase.child("Reservation").push().getKey();
-        Reservation reservation = new Reservation("0", roomId,timeStamp,reservedDate,reservedType);
+        Reservation reservation = new Reservation(user.getUid(), roomId,timeStamp,reservedDate,reservedType);
         Map<String, Object> reservationValue = reservation.toMap();
 
         saveReservationToFirebase(key, reservationValue);

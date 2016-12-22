@@ -1,4 +1,4 @@
-package com.example.katesudal.spikefirebase;
+package com.example.katesudal.spikefirebase.Model;
 
 /**
  * Created by katesuda.l on 16/12/2559.

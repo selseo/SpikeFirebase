@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.example.katesudal.spikefirebase.RoomReservation">
+    tools:context="com.example.katesudal.spikefirebase.Activity.RoomReservationActivity">
     <DatePicker
         android:id="@+id/datePickerReservedDate"
         android:layout_width="wrap_content"

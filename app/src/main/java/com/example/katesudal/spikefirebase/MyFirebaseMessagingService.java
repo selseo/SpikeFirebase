@@ -1,21 +1,17 @@
 package com.example.katesudal.spikefirebase;
 
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.katesudal.spikefirebase.Activity.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.List;
 
 /**
  * Created by katesuda.l on 14/12/2559.
