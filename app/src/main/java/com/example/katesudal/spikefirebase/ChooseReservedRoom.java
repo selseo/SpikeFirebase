@@ -1,9 +1,7 @@
 package com.example.katesudal.spikefirebase;
 
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,22 +43,8 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         buttonSendReservation.setOnClickListener(this);
 
         reservedDate = getIntent().getExtras().getString("time");
-//        mDatabase.child("Room").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                List<HashMap<String,String>> rooms;
-//                Log.d("List", String.valueOf(dataSnapshot.getValue()));
-//                rooms = (List<HashMap<String,String>>) dataSnapshot.getValue();
-//                showRoomNameInSpinner(rooms);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-        showAvailableRoomInSpinner();
 
+        showAvailableRoomInSpinner();
 
     }
 
@@ -73,12 +57,9 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
                     Room room = roomDataSnapShot.getValue(Room.class);
                     availableRoom.put(roomDataSnapShot.getKey(), room);
                 }
-                Log.d("AllRoom", String.valueOf(availableRoom));
-                removeUnavailableRoomFromMap();
+                selectAvailableRoom();
 
             }
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -86,40 +67,17 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void removeUnavailableRoomFromMap() {
-        mDatabase.child("ReservationDetail")
+    private void selectAvailableRoom() {
+        mDatabase.child("Reservation")
                 .orderByChild("reservedDate")
                 .equalTo(reservedDate)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue()==null){
+                        if (dataSnapshot.getValue() == null) {
                             showRoomNameInSpinner(availableRoom);
-                        }
-                        else {
-                            final long[] snapShotIndex = {0};
-                            for (DataSnapshot roomDataSnapShot : dataSnapshot.getChildren()) {
-                                final long childrenCount = dataSnapshot.getChildrenCount();
-                                Log.d("SnapShotIndex", String.valueOf(roomDataSnapShot.getValue()));
-                                mDatabase.child("Reservation")
-                                        .child(roomDataSnapShot.getKey())
-                                        .child("roomId")
-                                        .addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                availableRoom.remove(dataSnapshot.getValue());
-                                                Log.d("CheckOrder", "Remove room");
-                                                snapShotIndex[0]++;
-                                                if (snapShotIndex[0] >= childrenCount)
-                                                    showRoomNameInSpinner(availableRoom);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                            }
+                        } else {
+                            removeUnavailableRoom(dataSnapshot);
                         }
                     }
 
@@ -130,28 +88,23 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
                 });
     }
 
+    private void removeUnavailableRoom(DataSnapshot dataSnapshot) {
+        for (DataSnapshot reservationDataSnapShot : dataSnapshot.getChildren()) {
+            Reservation reservation = reservationDataSnapShot.getValue(Reservation.class);
+            availableRoom.remove(reservation.getRoomId());
+        }
+        showRoomNameInSpinner(availableRoom);
+    }
+
     private void showRoomNameInSpinner(HashMap<String, Room> availableRoomInSpinner) {
-        Log.d("CheckOrder","Add to spinner");
         List<String> nameList = new ArrayList<>();
         for (String key : availableRoomInSpinner.keySet()) {
             nameList.add(availableRoomInSpinner.get(key).getName());
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,nameList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nameList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFreeRoom.setAdapter(dataAdapter);
     }
-
-//    private void showRoomNameInSpinner(List<HashMap<String,String>> rooms) {
-//        Log.d("Room", String.valueOf(rooms));
-//        List<String> roomNames = new ArrayList<>();
-//        for(int roomIndex =0 ;roomIndex<rooms.size(); roomIndex++){
-//            roomNames.add(rooms.get(roomIndex).get("name"));
-//            Log.d("RoomName=",rooms.get(roomIndex).get("name"));
-//        }
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,roomNames);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerFreeRoom.setAdapter(dataAdapter);
-//    }
 
     @Override
     public void onClick(View v) {
@@ -163,9 +116,6 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot roomDataSnapshot1 : dataSnapshot.getChildren()) {
-                        Room room = roomDataSnapshot1.getValue(Room.class);
-                        Log.d("SnapValu2e=", room.toString());
-                        Log.d("Key=", roomDataSnapshot1.getKey());
                         createReservationByRoomId(roomDataSnapshot1.getKey());
                     }
                 }
@@ -184,19 +134,16 @@ public class ChooseReservedRoom extends AppCompatActivity implements View.OnClic
         Long tsLong = System.currentTimeMillis() / 1000;
         String timeStamp = getDateCurrentTimeZone(tsLong);
         String reservedType = "zzz";
-        String key = mDatabase.child("ReservationDetail").push().getKey();
-        Reservation reservation = new Reservation("0", roomId);
-        ReservationDetail reservationDetail = new ReservationDetail(reservedDate, timeStamp, reservedType);
-        Map<String, Object> reservationDetailValues = reservationDetail.toMap();
+        String key = mDatabase.child("Reservation").push().getKey();
+        Reservation reservation = new Reservation("0", roomId,timeStamp,reservedDate,reservedType);
         Map<String, Object> reservationValue = reservation.toMap();
 
-        saveReservationToFirebase(key, reservationDetailValues, reservationValue);
+        saveReservationToFirebase(key, reservationValue);
     }
 
-    private void saveReservationToFirebase(String key, Map<String, Object> reservationDetailValues, Map<String, Object> reservationValue) {
+    private void saveReservationToFirebase(String key, Map<String, Object> reservationValue) {
         Map<String, Object> childUpdates = new HashMap<>();
 
-        childUpdates.put("/ReservationDetail/" + key, reservationDetailValues);
         childUpdates.put("/Reservation/" + key, reservationValue);
 
         mDatabase.updateChildren(childUpdates);
