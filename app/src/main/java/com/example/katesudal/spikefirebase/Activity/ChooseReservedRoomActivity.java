@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.katesudal.spikefirebase.Model.Reservation;
@@ -32,6 +33,7 @@ import java.util.TimeZone;
 public class ChooseReservedRoomActivity extends AppCompatActivity implements View.OnClickListener {
     Spinner spinnerFreeRoom;
     Button buttonSendReservation;
+    EditText editTextType;
     private DatabaseReference mDatabase;
     String reservedDate;
     HashMap<String, Room> availableRoom;
@@ -45,6 +47,7 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
 
         spinnerFreeRoom = (Spinner) findViewById(R.id.spinnerFreeRoom);
         buttonSendReservation = (Button) findViewById(R.id.buttonSendReservation);
+        editTextType = (EditText) findViewById(R.id.editTextType);
 
         buttonSendReservation.setOnClickListener(this);
 
@@ -140,7 +143,7 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Long tsLong = System.currentTimeMillis() / 1000;
         String timeStamp = getDateCurrentTimeZone(tsLong);
-        String reservedType = "zzz";
+        String reservedType = String.valueOf(editTextType.getText());
         String key = mDatabase.child("Reservation").push().getKey();
         Reservation reservation = new Reservation(user.getUid(), roomId,timeStamp,reservedDate,reservedType);
         Map<String, Object> reservationValue = reservation.toMap();

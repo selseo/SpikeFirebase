@@ -16,6 +16,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </Spinner>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reservation Type :"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/editTextType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:textSize="20sp"/>
     <Button
         android:id="@+id/buttonSendReservation"
         android:layout_width="wrap_content"
