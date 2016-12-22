@@ -44,7 +44,9 @@ public class RoomReservation extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if(v.getId()==R.id.buttonNextToChooseRoom){
             String chooseTime;
-            chooseTime = String.valueOf(datePickerReservedDate.getDayOfMonth());
+            chooseTime = ""+datePickerReservedDate.getDayOfMonth()+"-"
+                    +datePickerReservedDate.getMonth()+"-"
+                    +datePickerReservedDate.getYear();
             if(radioButtonAM.isChecked()) chooseTime = chooseTime+"-AM";
             else if(radioButtonPM.isChecked()) chooseTime = chooseTime+"-PM";
 
