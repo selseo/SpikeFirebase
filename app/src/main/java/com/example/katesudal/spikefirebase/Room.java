@@ -9,6 +9,18 @@ public class Room {
     private int maxCapacity;
     private int floor;
 
+    @Override
+    public String toString() {
+        return "Room{" +
+                "name='" + name + '\'' +
+                ", maxCapacity=" + maxCapacity +
+                ", floor=" + floor +
+                '}';
+    }
+
+    public Room() {
+    }
+
     public Room(int floor, int maxCapacity, String name) {
         this.floor = floor;
         this.maxCapacity = maxCapacity;
