@@ -1,15 +1,15 @@
 package com.example.katesudal.spikefirebase.Model;
 
 
-public class SendNotiRequest {
+public class SendNotificationRequest {
 
     private Notification notification;
     private String to;
 
-    public SendNotiRequest() {
+    public SendNotificationRequest() {
     }
 
-    public SendNotiRequest(Notification notification, String to) {
+    public SendNotificationRequest(Notification notification, String to) {
         super();
         this.notification = notification;
         this.to = to;

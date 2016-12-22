@@ -6,16 +6,16 @@ import java.util.List;
  * Created by katesuda.l on 15/12/2559.
  */
 
-public class SendNotiResponse {
+public class SendNotificationResponse {
     private int multicast_id;
     private int success;
     private int failure;
     private int canonical_ids;
     private List<Result> results;
 
-    public SendNotiResponse(){}
+    public SendNotificationResponse(){}
 
-    public SendNotiResponse(int canonical_ids, int failure, int multicast_id, List<Result> results, int success) {
+    public SendNotificationResponse(int canonical_ids, int failure, int multicast_id, List<Result> results, int success) {
         this.canonical_ids = canonical_ids;
         this.failure = failure;
         this.multicast_id = multicast_id;

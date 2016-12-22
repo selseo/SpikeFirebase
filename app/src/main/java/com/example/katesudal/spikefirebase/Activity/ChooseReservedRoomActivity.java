@@ -1,5 +1,6 @@
 package com.example.katesudal.spikefirebase.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -153,6 +154,9 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
         childUpdates.put("/Reservation/" + key, reservationValue);
 
         mDatabase.updateChildren(childUpdates);
+
+        Intent intent = new Intent(this,SignInActivity.class);
+        startActivity(intent);
     }
 
     public String getDateCurrentTimeZone(long timestamp) {

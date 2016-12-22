@@ -13,13 +13,13 @@
     tools:context="com.example.katesudal.spikefirebase.Activity.MainActivity">
 
     <EditText
-        android:id="@+id/editTextSendNotiMessage"
+        android:id="@+id/editTextSendNotificationMessage"
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:textSize="24sp"/>
 
     <Button
-        android:id="@+id/buttonSendNoti"
+        android:id="@+id/buttonSendNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send"/>
@@ -29,4 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Room Reservation"/>
+
+    <Button
+        android:id="@+id/buttonSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"/>
 </LinearLayout>
