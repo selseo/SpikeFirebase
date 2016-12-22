@@ -4,40 +4,61 @@
     android:id="@+id/activity_room_reservation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context="com.example.katesudal.spikefirebase.Activity.RoomReservationActivity">
+
     <DatePicker
         android:id="@+id/datePickerReservedDate"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="24">
+        android:layout_weight="18">
     </DatePicker>
-    <RadioGroup
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="horizontal"
-        android:layout_gravity="center">
-        <RadioButton
-            android:id="@+id/radioButtonAM"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="AM"/>
-        <RadioButton
-            android:id="@+id/radioButtonPM"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PM"/>
-    </RadioGroup>
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp">
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/radioButtonAM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AM" />
+
+            <RadioButton
+                android:id="@+id/radioButtonPM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PM" />
+        </RadioGroup>
+        <EditText
+            android:id="@+id/editTextCapacity"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:inputType="number">
+        </EditText>
+    </LinearLayout>
+
     <Button
         android:id="@+id/buttonNextToChooseRoom"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="3"
         android:layout_gravity="center"
-        android:text="Next To Choose Room"/>
+        android:layout_weight="3"
+        android:text="Next To Choose Room" />
 </LinearLayout>

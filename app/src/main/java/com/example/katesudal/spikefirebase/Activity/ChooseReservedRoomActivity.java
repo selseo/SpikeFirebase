@@ -36,6 +36,7 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
     EditText editTextType;
     private DatabaseReference mDatabase;
     String reservedDate;
+    int capacity;
     HashMap<String, Room> availableRoom;
 
 
@@ -52,6 +53,7 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
         buttonSendReservation.setOnClickListener(this);
 
         reservedDate = getIntent().getExtras().getString("time");
+        capacity = Integer.parseInt(getIntent().getExtras().getString("capacity"));
 
         showAvailableRoomInSpinner();
 
@@ -59,7 +61,10 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
 
     private void showAvailableRoomInSpinner() {
         availableRoom = new HashMap<>();
-        mDatabase.child("Room").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Room")
+                .orderByChild("maxCapacity")
+                .startAt(capacity)
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot roomDataSnapShot : dataSnapshot.getChildren()) {

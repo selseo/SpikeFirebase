@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.example.katesudal.spikefirebase.R;
@@ -19,6 +20,7 @@ public class RoomReservationActivity extends AppCompatActivity implements View.O
     DatePicker datePickerReservedDate;
     RadioButton radioButtonAM;
     RadioButton radioButtonPM;
+    EditText editTextCapacity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class RoomReservationActivity extends AppCompatActivity implements View.O
         datePickerReservedDate = (DatePicker) findViewById(R.id.datePickerReservedDate);
         radioButtonAM = (RadioButton) findViewById(R.id.radioButtonAM);
         radioButtonPM = (RadioButton) findViewById(R.id.radioButtonPM);
+        editTextCapacity = (EditText) findViewById(R.id.editTextCapacity);
 
         buttonNextToChooseRoom.setOnClickListener(this);
 
@@ -41,6 +44,7 @@ public class RoomReservationActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.buttonNextToChooseRoom){
+            String capacity = String.valueOf(editTextCapacity.getText());
             String chooseTime;
             chooseTime = ""+datePickerReservedDate.getDayOfMonth()+"-"
                     +datePickerReservedDate.getMonth()+"-"
@@ -50,6 +54,7 @@ public class RoomReservationActivity extends AppCompatActivity implements View.O
 
             Intent intent = new Intent(this,ChooseReservedRoomActivity.class);
             intent.putExtra("time",chooseTime);
+            intent.putExtra("capacity",capacity);
             startActivity(intent);
         }
     }
