@@ -36,7 +36,9 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
     EditText editTextType;
     private DatabaseReference mDatabase;
     String reservedDate;
-    int capacity;
+    int startTime;
+    int endTime;
+    int amount;
     HashMap<String, Room> availableRoom;
 
 
@@ -52,28 +54,28 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
 
         buttonSendReservation.setOnClickListener(this);
 
-        reservedDate = getIntent().getExtras().getString("time");
-        capacity = Integer.parseInt(getIntent().getExtras().getString("capacity"));
+        reservedDate = getIntent().getExtras().getString("date");
+        startTime = getIntent().getExtras().getInt("startTime");
+        endTime = getIntent().getExtras().getInt("endTime");
+        amount = getIntent().getExtras().getInt("amount");
 
-        showAvailableRoomInSpinner();
-
+        getAllRoomOnAmount();
     }
 
-    private void showAvailableRoomInSpinner() {
-        availableRoom = new HashMap<>();
+    private void getAllRoomOnAmount() {
         mDatabase.child("Room")
                 .orderByChild("maxCapacity")
-                .startAt(capacity)
+                .startAt(amount)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot roomDataSnapShot : dataSnapshot.getChildren()) {
-                    Room room = roomDataSnapShot.getValue(Room.class);
-                    availableRoom.put(roomDataSnapShot.getKey(), room);
+                HashMap<String,Room> roomsMap = new HashMap<>();
+                for(DataSnapshot roomDataSnapshot : dataSnapshot.getChildren()){
+                    roomsMap.put(roomDataSnapshot.getKey(),roomDataSnapshot.getValue(Room.class));
                 }
-                selectAvailableRoom();
-
+                getReservationOnDate(roomsMap);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -81,18 +83,20 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
         });
     }
 
-    private void selectAvailableRoom() {
+
+    private void getReservationOnDate(final HashMap<String,Room> roomsMap) {
         mDatabase.child("Reservation")
                 .orderByChild("reservedDate")
                 .equalTo(reservedDate)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null) {
-                            showRoomNameInSpinner(availableRoom);
-                        } else {
-                            removeUnavailableRoom(dataSnapshot);
+                        List<Reservation> reservationListOnDate = new ArrayList<>();
+                        for(DataSnapshot reservationDataSnapshot : dataSnapshot.getChildren()){
+                            Reservation reservation = reservationDataSnapshot.getValue(Reservation.class);
+                            reservationListOnDate.add(reservation);
                         }
+                        removeReservedRoom(roomsMap,reservationListOnDate);
                     }
 
                     @Override
@@ -102,23 +106,30 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
                 });
     }
 
-    private void removeUnavailableRoom(DataSnapshot dataSnapshot) {
-        for (DataSnapshot reservationDataSnapShot : dataSnapshot.getChildren()) {
-            Reservation reservation = reservationDataSnapShot.getValue(Reservation.class);
-            availableRoom.remove(reservation.getRoomId());
+    private void removeReservedRoom(HashMap<String,Room> roomsMap,
+                                    List<Reservation> reservationListOnDate) {
+        for(Reservation reservation:reservationListOnDate){
+            if(!(startTime>=reservation.getEndTime()||
+                    endTime<=reservation.getStartTime())){
+                if(roomsMap.containsKey(reservation.getRoomId())){
+                    roomsMap.remove(reservation.getRoomId());
+                }
+            }
         }
-        showRoomNameInSpinner(availableRoom);
+        showAvailableRoomInSpinner(roomsMap);
+
     }
 
-    private void showRoomNameInSpinner(HashMap<String, Room> availableRoomInSpinner) {
+    private void showAvailableRoomInSpinner(HashMap<String, Room> roomsMap) {
         List<String> nameList = new ArrayList<>();
-        for (String key : availableRoomInSpinner.keySet()) {
-            nameList.add(availableRoomInSpinner.get(key).getName());
+        for (String key : roomsMap.keySet()) {
+            nameList.add(roomsMap.get(key).getName());
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nameList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFreeRoom.setAdapter(dataAdapter);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -150,7 +161,8 @@ public class ChooseReservedRoomActivity extends AppCompatActivity implements Vie
         String timeStamp = getDateCurrentTimeZone(tsLong);
         String reservedType = String.valueOf(editTextType.getText());
         String key = mDatabase.child("Reservation").push().getKey();
-        Reservation reservation = new Reservation(user.getUid(), roomId,timeStamp,reservedDate,reservedType);
+        Reservation reservation = new Reservation(user.getUid(), roomId,timeStamp,reservedDate,
+                reservedType,startTime,endTime);
         Map<String, Object> reservationValue = reservation.toMap();
 
         saveReservationToFirebase(key, reservationValue);

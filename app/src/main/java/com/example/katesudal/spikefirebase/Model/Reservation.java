@@ -15,13 +15,23 @@ public class Reservation {
     private String timeStamp;
     private String reservedDate;
     private String usedType;
+    private int startTime;
+    private int endTime;
 
-    public Reservation(String userId, String roomId, String timeStamp, String reservedDate, String usedType) {
+    public Reservation(String userId,
+                       String roomId,
+                       String timeStamp,
+                       String reservedDate,
+                       String usedType,
+                       int startTime,
+                       int endTime) {
         this.userId = userId;
         this.roomId = roomId;
         this.timeStamp = timeStamp;
         this.reservedDate = reservedDate;
         this.usedType = usedType;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public Reservation(){}
@@ -66,6 +76,22 @@ public class Reservation {
         this.usedType = usedType;
     }
 
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -74,6 +100,8 @@ public class Reservation {
         result.put("timeStamp", timeStamp);
         result.put("reservedDate", reservedDate);
         result.put("usedType", usedType);
+        result.put("startTime", startTime);
+        result.put("endTime", endTime);
 
         return result;
     }

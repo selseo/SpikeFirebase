@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(v.getId()==R.id.buttonGotoReservation){
-            Intent intent = new Intent(this,RoomReservationActivity.class);
+            Intent intent = new Intent(this,ChooseReservedDateActivity.class);
             startActivity(intent);
         }
 
